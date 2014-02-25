@@ -6,7 +6,7 @@
 # So, the numbers n and k are the public key.
 
 # To find the secret key:
-# d*e = 1 % z (solve for d)  => (k*j)/z = d, with a remainder of one
+# d*k = 1 % z (solve for d)  => (k*d)/z = d, with a remainder of one
 # d is the secret key.
 
 # To encrypt the message:
@@ -18,3 +18,18 @@
 # To decrypt the message:
 # E ^ j = P % n
 # Where j is the secret key, E is the message, and P is the plaintext message.
+import time, random
+from fractions import gcd
+
+def isPrime(x):
+    divisors = [i for i in range(2,x) if x%i==0]
+    return len(devisors)==0
+def RSAKeygen(p,q):
+    n = p*q
+    z = (p-1)*(q-1)
+    coprimes = [i for i in range(2,z) if isPrime(i)]
+    nonDivisors = [i for i in coprimes if z%i==0]
+    random.seed(42)
+    k = nonDivisors[random.randint(0,len(nonDivisors)-1)]
+    publicKey = (n,k)
+        
