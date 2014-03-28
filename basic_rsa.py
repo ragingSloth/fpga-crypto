@@ -23,13 +23,46 @@ from fractions import gcd
 
 def isPrime(x):
     divisors = [i for i in range(2,x) if x%i==0]
-    return len(devisors)==0
+    return len(divisors)==0
+def extendedEuclidianMMI(a,b):
+    t=0
+    t1=1
+    r=b
+    r1=a
+    while r1 !=0:
+        q = r//r1
+        t,t1=t1,t-q*t1
+        r,r1=r1,r-q*r1
+    if r > 1: return None
+    elif t<0:t=t+b
+    return t
 def RSAKeygen(p,q):
     n = p*q
     z = (p-1)*(q-1)
-    coprimes = [i for i in range(2,z) if isPrime(i)]
-    nonDivisors = [i for i in coprimes if z%i==0]
-    random.seed(42)
-    k = nonDivisors[random.randint(0,len(nonDivisors)-1)]
+    coprimes = [i for i in range(2,z+1) if isPrime(i)]
+    random.seed(time.time())
+    k = coprimes[random.randint(0,len(coprimes)-1)]
     publicKey = (n,k)
-        
+    privateKey = (n,extendedEuclidianMMI(k,z))
+    return [privateKey,publicKey]
+
+def paddingFunk(message,key):
+    m = 1
+    for char in message:
+        m*=ord(char)
+    print m%key[0]
+    if m>key[0]: return m%key[0]
+    else:
+        print m
+        return m
+
+def encrypt(message,key,padding):
+    m=padding(message,key)
+    return m**key[1]%key[0]
+
+def decrypt(message,key): return message**key[1]%key[0]
+
+keys = RSAKeygen(61,53)
+M=encrypt('hello',keys[1],paddingFunk)
+print M
+print decrypt(M,keys[0])
