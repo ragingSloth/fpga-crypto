@@ -1,4 +1,3 @@
-fpga-crypto
 ===========
 
-An implementation of RSA on an FPGA.
+An implementation of RSA
